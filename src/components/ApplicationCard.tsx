@@ -17,19 +17,22 @@ interface ApplicationCardProps {
 }
 
 const statusColors = {
-  draft: "bg-muted text-muted-foreground",
+  draft: "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300",
   applied: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
   interview: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
   offer: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
   rejected: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
 };
 
-const cardGradients = [
-  "bg-gradient-to-br from-blue-500 to-blue-600",
-  "bg-gradient-to-br from-purple-500 to-purple-600",
-  "bg-gradient-to-br from-orange-500 to-orange-600",
-  "bg-gradient-to-br from-green-500 to-green-600",
-  "bg-gradient-to-br from-red-500 to-red-600",
+const cardBackgrounds = [
+  "bg-card-orange text-white",
+  "bg-card-brown text-white", 
+  "bg-card-gray text-white",
+  "bg-card-green text-white",
+  "bg-card-red text-white",
+  "bg-card-blue text-white",
+  "bg-card-purple text-white",
+  "bg-card-yellow text-white",
 ];
 
 export function ApplicationCard({
@@ -43,19 +46,24 @@ export function ApplicationCard({
   notes,
   gradient
 }: ApplicationCardProps) {
-  const gradientClass = gradient || cardGradients[Math.abs(id.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % cardGradients.length];
+  const cardBg = cardBackgrounds[Math.abs(id.split('').reduce((a, b) => a + b.charCodeAt(0), 0)) % cardBackgrounds.length];
   const statusColor = statusColors[status as keyof typeof statusColors] || statusColors.draft;
 
   return (
-    <Card className="hover:shadow-lg transition-all duration-200 cursor-pointer group">
+    <Card className={`hover:shadow-lg transition-all duration-200 cursor-pointer group overflow-hidden ${cardBg}`}>
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between">
-          <div className={`w-12 h-12 rounded-lg ${gradientClass} flex items-center justify-center mb-3`}>
-            <Briefcase className="w-6 h-6 text-white" />
+          <div className="flex items-center space-x-3 mb-3">
+            <div className="w-8 h-8 rounded bg-white/20 flex items-center justify-center">
+              <Briefcase className="w-4 h-4 text-white" />
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold text-lg leading-tight text-white mb-1">{title}</h3>
+            </div>
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button variant="ghost" size="sm" className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity text-white hover:bg-white/20">
                 <MoreHorizontal className="w-4 h-4" />
               </Button>
             </DropdownMenuTrigger>
@@ -66,36 +74,28 @@ export function ApplicationCard({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div>
-          <h3 className="font-semibold text-lg leading-tight mb-1">{title}</h3>
-          <Badge className={`${statusColor} text-xs font-medium mb-2`}>
-            {status.charAt(0).toUpperCase() + status.slice(1)}
-          </Badge>
-        </div>
+        <Badge className={`${statusColor} text-xs font-medium w-fit`}>
+          {status.charAt(0).toUpperCase() + status.slice(1)}
+        </Badge>
       </CardHeader>
-      <CardContent className="space-y-3">
-        <div className="flex items-center text-sm text-muted-foreground">
+      <CardContent className="space-y-3 text-white">
+        <div className="flex items-center text-sm text-white/80">
           <Building2 className="w-4 h-4 mr-2" />
           <span>{company}</span>
         </div>
-        <div className="text-sm text-muted-foreground">
-          <span className="font-medium">{role}</span>
+        <div className="text-sm text-white/90 font-medium">
+          {role}
         </div>
         {appliedDate && (
-          <div className="flex items-center text-xs text-muted-foreground">
+          <div className="flex items-center text-xs text-white/70">
             <Calendar className="w-3 h-3 mr-1" />
-            <span>Applied {appliedDate}</span>
+            <span>{appliedDate} • 4 sources</span>
           </div>
         )}
         {lastUpdate && (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-white/70">
             Last update: {lastUpdate}
           </div>
-        )}
-        {notes && (
-          <p className="text-sm text-muted-foreground line-clamp-2 mt-2">
-            {notes}
-          </p>
         )}
       </CardContent>
     </Card>

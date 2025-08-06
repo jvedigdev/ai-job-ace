@@ -8,113 +8,111 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    /* AI'll Take That Job Theme - NotebookLM inspired */
-    --background: 210 20% 98%;
-    --foreground: 210 20% 10%;
+    /* NotebookLM Theme - Light Mode */
+    --background: 245 245 249;
+    --foreground: 17 24 39;
 
-    --card: 0 0% 100%;
-    --card-foreground: 210 20% 10%;
+    --card: 255 255 255;
+    --card-foreground: 17 24 39;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 210 20% 10%;
+    --popover: 255 255 255;
+    --popover-foreground: 17 24 39;
 
-    /* Blue accent inspired by NotebookLM */
-    --primary: 214 84% 56%;
-    --primary-foreground: 0 0% 98%;
+    /* NotebookLM Blue */
+    --primary: 59 130 246;
+    --primary-foreground: 255 255 255;
 
-    --secondary: 210 40% 94%;
-    --secondary-foreground: 210 20% 15%;
+    --secondary: 241 245 249;
+    --secondary-foreground: 51 65 85;
 
-    --muted: 210 40% 94%;
-    --muted-foreground: 210 14% 45%;
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
 
-    --accent: 214 84% 96%;
-    --accent-foreground: 214 84% 20%;
+    --accent: 241 245 249;
+    --accent-foreground: 51 65 85;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
 
-    --border: 214 31% 91%;
-    --input: 214 31% 91%;
-    --ring: 214 84% 56%;
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 59 130 246;
 
-    --radius: 0.75rem;
+    --radius: 0.5rem;
 
-    /* Job status colors */
-    --success: 142 76% 36%;
-    --success-foreground: 0 0% 98%;
-    --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 98%;
-    --info: 214 84% 56%;
-    --info-foreground: 0 0% 98%;
+    /* NotebookLM Header - Dark */
+    --header-background: 15 23 42;
+    --header-foreground: 248 250 252;
 
-    /* Card gradients */
-    --gradient-blue: linear-gradient(135deg, hsl(214 84% 56%), hsl(214 84% 66%));
-    --gradient-purple: linear-gradient(135deg, hsl(263 70% 50%), hsl(263 70% 60%));
-    --gradient-orange: linear-gradient(135deg, hsl(25 95% 53%), hsl(25 95% 63%));
-    --gradient-green: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 76% 46%));
-    --gradient-red: linear-gradient(135deg, hsl(0 84% 60%), hsl(0 84% 70%));
+    /* Card Colors - NotebookLM Style */
+    --card-orange: 234 88 12;
+    --card-brown: 120 53 15;
+    --card-gray: 75 85 99;
+    --card-green: 34 197 94;
+    --card-red: 220 38 38;
+    --card-blue: 59 130 246;
+    --card-purple: 147 51 234;
+    --card-yellow: 245 158 11;
 
-    --sidebar-background: 210 30% 96%;
-    --sidebar-foreground: 210 20% 15%;
-    --sidebar-primary: 214 84% 56%;
-    --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 214 84% 94%;
-    --sidebar-accent-foreground: 214 84% 20%;
-    --sidebar-border: 214 31% 91%;
-    --sidebar-ring: 214 84% 56%;
+    --sidebar-background: 248 250 252;
+    --sidebar-foreground: 51 65 85;
+    --sidebar-primary: 59 130 246;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 241 245 249;
+    --sidebar-accent-foreground: 51 65 85;
+    --sidebar-border: 226 232 240;
+    --sidebar-ring: 59 130 246;
   }
 
   .dark {
-    --background: 210 20% 8%;
-    --foreground: 210 20% 95%;
+    --background: 15 23 42;
+    --foreground: 248 250 252;
 
-    --card: 210 20% 12%;
-    --card-foreground: 210 20% 95%;
+    --card: 30 41 59;
+    --card-foreground: 248 250 252;
 
-    --popover: 210 20% 12%;
-    --popover-foreground: 210 20% 95%;
+    --popover: 30 41 59;
+    --popover-foreground: 248 250 252;
 
-    --primary: 214 84% 66%;
-    --primary-foreground: 210 20% 8%;
+    --primary: 59 130 246;
+    --primary-foreground: 255 255 255;
 
-    --secondary: 210 20% 16%;
-    --secondary-foreground: 210 20% 85%;
+    --secondary: 51 65 85;
+    --secondary-foreground: 226 232 240;
 
-    --muted: 210 20% 16%;
-    --muted-foreground: 210 14% 55%;
+    --muted: 51 65 85;
+    --muted-foreground: 148 163 184;
 
-    --accent: 214 84% 16%;
-    --accent-foreground: 214 84% 85%;
+    --accent: 51 65 85;
+    --accent-foreground: 226 232 240;
 
-    --destructive: 0 84% 70%;
-    --destructive-foreground: 210 20% 8%;
+    --destructive: 239 68 68;
+    --destructive-foreground: 255 255 255;
 
-    --border: 210 20% 16%;
-    --input: 210 20% 16%;
-    --ring: 214 84% 66%;
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 59 130 246;
 
-    --success: 142 76% 46%;
-    --success-foreground: 210 20% 8%;
-    --warning: 38 92% 60%;
-    --warning-foreground: 210 20% 8%;
-    --info: 214 84% 66%;
-    --info-foreground: 210 20% 8%;
+    --header-background: 15 23 42;
+    --header-foreground: 248 250 252;
 
-    --gradient-blue: linear-gradient(135deg, hsl(214 84% 56%), hsl(214 84% 66%));
-    --gradient-purple: linear-gradient(135deg, hsl(263 70% 60%), hsl(263 70% 70%));
-    --gradient-orange: linear-gradient(135deg, hsl(25 95% 63%), hsl(25 95% 73%));
-    --gradient-green: linear-gradient(135deg, hsl(142 76% 46%), hsl(142 76% 56%));
-    --gradient-red: linear-gradient(135deg, hsl(0 84% 70%), hsl(0 84% 80%));
+    --card-orange: 251 146 60;
+    --card-brown: 180 83 9;
+    --card-gray: 107 114 128;
+    --card-green: 52 211 153;
+    --card-red: 248 113 113;
+    --card-blue: 96 165 250;
+    --card-purple: 168 85 247;
+    --card-yellow: 251 191 36;
 
-    --sidebar-background: 210 20% 10%;
-    --sidebar-foreground: 210 20% 85%;
-    --sidebar-primary: 214 84% 66%;
-    --sidebar-primary-foreground: 210 20% 8%;
-    --sidebar-accent: 214 84% 16%;
-    --sidebar-accent-foreground: 214 84% 85%;
-    --sidebar-border: 210 20% 16%;
-    --sidebar-ring: 214 84% 66%;
+    --sidebar-background: 30 41 59;
+    --sidebar-foreground: 226 232 240;
+    --sidebar-primary: 59 130 246;
+    --sidebar-primary-foreground: 255 255 255;
+    --sidebar-accent: 51 65 85;
+    --sidebar-accent-foreground: 226 232 240;
+    --sidebar-border: 51 65 85;
+    --sidebar-ring: 59 130 246;
   }
 }
 

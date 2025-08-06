@@ -61,7 +61,20 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
-				}
+				},
+				// NotebookLM specific colors
+				'header': {
+					DEFAULT: 'hsl(var(--header-background))',
+					foreground: 'hsl(var(--header-foreground))'
+				},
+				'card-orange': 'hsl(var(--card-orange))',
+				'card-brown': 'hsl(var(--card-brown))',
+				'card-gray': 'hsl(var(--card-gray))',
+				'card-green': 'hsl(var(--card-green))',
+				'card-red': 'hsl(var(--card-red))',
+				'card-blue': 'hsl(var(--card-blue))',
+				'card-purple': 'hsl(var(--card-purple))',
+				'card-yellow': 'hsl(var(--card-yellow))'
 			},
 			borderRadius: {
 				lg: 'var(--radius)',

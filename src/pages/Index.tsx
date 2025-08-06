@@ -100,42 +100,48 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b bg-card">
-        <div className="max-w-7xl mx-auto px-6 py-4">
+      {/* Header - NotebookLM Style */}
+      <header className="bg-header border-b">
+        <div className="max-w-7xl mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
-                <Zap className="w-5 h-5 text-primary-foreground" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold">AI'll Take That Job</h1>
-                <p className="text-sm text-muted-foreground">Your AI-powered job application notebook</p>
+              <div className="flex items-center space-x-2">
+                <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
+                  <Zap className="w-4 h-4 text-white" />
+                </div>
+                <span className="text-header-foreground font-medium">AI'll Take That Job</span>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <Button variant="outline" size="sm">
-                <Settings className="w-4 h-4 mr-2" />
-                Settings
+            <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
+                <Settings className="w-4 h-4" />
               </Button>
-              <Button size="sm">
-                <Plus className="w-4 h-4 mr-2" />
-                New Application
+              <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
+                ⚡
               </Button>
+              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
+                <span className="text-xs text-white font-medium">K</span>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Sidebar */}
-          <div className="lg:w-80 space-y-6">
+      <div className="bg-background">
+        {/* Welcome Section */}
+        <div className="max-w-7xl mx-auto px-6 py-8">
+          <h1 className="text-4xl font-bold text-primary mb-2">Welcome to jobs llm</h1>
+        </div>
+        
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="flex flex-col lg:flex-row gap-8">
+            {/* Left Sidebar */}
+            <div className="lg:w-80 space-y-6">
             {/* Upload Section */}
-            <div className="bg-card rounded-lg p-4 border">
-              <div className="text-center py-6">
-                <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+            <div className="bg-card rounded-lg p-6 border">
+              <div className="text-center py-8">
+                <Upload className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground mb-4">
                   Click to upload files and drop documents here or select files
                 </p>
@@ -145,23 +151,23 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Navigation */}
-            <div className="space-y-2">
+            {/* Tab Navigation */}
+            <div className="flex space-x-1 bg-muted rounded-lg p-1">
               <Button
                 variant={selectedView === "applications" ? "secondary" : "ghost"}
-                className="w-full justify-start"
+                size="sm"
+                className="flex-1"
                 onClick={() => setSelectedView("applications")}
               >
-                <Briefcase className="w-4 h-4 mr-2" />
                 My Applications
               </Button>
               <Button
-                variant={selectedView === "documents" ? "secondary" : "ghost"}
-                className="w-full justify-start"
+                variant={selectedView === "documents" ? "secondary" : "ghost"} 
+                size="sm"
+                className="flex-1"
                 onClick={() => setSelectedView("documents")}
               >
-                <FileText className="w-4 h-4 mr-2" />
-                All Documents
+                Apply
               </Button>
             </div>
 
@@ -198,26 +204,24 @@ const Index = () => {
               <SearchBar
                 value={searchQuery}
                 onChange={setSearchQuery}
-                placeholder={selectedView === "applications" ? "Search applications..." : "Search documents..."}
+                placeholder="Search"
+                className="max-w-md"
               />
             </div>
 
             {/* Content Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold">
-                  {selectedView === "applications" ? "My Applications" : "All Documents"}
-                </h2>
                 <p className="text-muted-foreground">
-                  {selectedView === "applications" 
-                    ? `Found ${filteredApplications.length} applications`
-                    : `Found ${filteredDocuments.length} documents`
-                  }
+                  Found {selectedView === "applications" ? filteredApplications.length : filteredDocuments.length} documents
                 </p>
               </div>
               <div className="flex items-center space-x-2">
                 <Button variant="outline" size="sm">
-                  Most recent
+                  <FileText className="w-4 h-4" />
+                </Button>
+                <Button variant="outline" size="sm">
+                  Most recent ▼
                 </Button>
               </div>
             </div>
