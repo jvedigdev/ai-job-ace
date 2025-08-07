@@ -7,7 +7,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 interface DocumentCardProps {
   id: string;
   title: string;
-  type: 'resume' | 'criteria' | 'other';
+  type: 'resume' | 'criteria' | 'other' | string; // Allow string type
   fileName?: string;
   fileSize?: number;
   createdAt: string;
@@ -39,8 +39,9 @@ export function DocumentCard({
   selected = false,
   onClick
 }: DocumentCardProps) {
-  const typeColor = typeColors[type];
-  const typeLabel = typeLabels[type];
+  // Safely access typeColor and typeLabel, defaulting if 'type' is not one of the predefined keys
+  const typeColor = typeColors[type as keyof typeof typeColors] || typeColors.other;
+  const typeLabel = typeLabels[type as keyof typeof typeLabels] || typeLabels.other;
 
   const formatFileSize = (bytes?: number) => {
     if (!bytes) return '';
