@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { ApplicationCard } from "@/components/ApplicationCard";
@@ -84,8 +84,12 @@ const Index = () => {
   const [selectedView, setSelectedView] = useState<"applications" | "documents">("applications");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
-  const { supabaseUser, isAuthenticated } = useSupabaseAuth();
+  const { supabaseUser, isAuthenticated, loading } = useSupabaseAuth();
   const { toast } = useToast();
+
+  useEffect(() => {
+    console.log("Auth State:", { isAuthenticated, supabaseUser, loading });
+  }, [isAuthenticated, supabaseUser, loading]);
 
   const filteredApplications = mockApplications.filter(app =>
     app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
