@@ -1,14 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { ApplicationCard } from "@/components/ApplicationCard";
 import { DocumentCard } from "@/components/DocumentCard";
 import { SearchBar } from "@/components/SearchBar";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Upload, Settings, FileText, Briefcase, Zap } from "lucide-react";
+import { Plus, Upload, Settings, FileText, Briefcase, Zap, Home } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import type { Tables } from "@/integrations/supabase/types";
 
-// Mock data for demonstration
+// Define a type for documents that matches the Supabase table structure
+type Document = Tables<'documents'>;
+
+// Mock data for demonstration - will be replaced by Supabase data
 const mockApplications = [
   {
     id: "1",
@@ -49,38 +56,91 @@ const mockApplications = [
   },
 ];
 
-const mockDocuments = [
-  {
-    id: "1",
-    title: "Software Engineer Resume 2025",
-    type: "resume" as const,
-    fileName: "resume_v3.pdf",
-    fileSize: 245000,
-    createdAt: "Feb 20, 2025",
-    content: "Experienced software engineer with 5+ years in full-stack development...",
-  },
-  {
-    id: "2",
-    title: "Job Search Criteria",
-    type: "criteria" as const,
-    createdAt: "Feb 18, 2025",
-    content: "Looking for remote-friendly companies, strong engineering culture, growth opportunities...",
-  },
-  {
-    id: "3",
-    title: "Portfolio Projects Summary",
-    type: "other" as const,
-    fileName: "portfolio.pdf",
-    fileSize: 1200000,
-    createdAt: "Feb 15, 2025",
-    content: "Collection of key projects including e-commerce platform, task management app...",
-  },
-];
-
 const Index = () => {
+  const { supabaseUser, isAuthenticated, loading: authLoading } = useSupabaseAuth();
   const [selectedView, setSelectedView] = useState<"applications" | "documents">("applications");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
+  const [documents, setDocuments] = useState<Document[]>([]); // Use Document type for state
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      if (isAuthenticated && supabaseUser) {
+        const { data, error } = await supabase
+          .from('documents')
+          .select('*')
+          .eq('user_id', supabaseUser.id);
+
+        if (error) {
+          console.error("Error fetching documents:", error);
+          toast.error("Failed to load documents.");
+        } else {
+          setDocuments(data || []);
+        }
+      } else {
+        // If not authenticated, clear documents or load mock data if preferred
+        setDocuments([]); 
+      }
+    };
+
+    fetchDocuments();
+  }, [isAuthenticated, supabaseUser]);
+
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) {
+      return;
+    }
+
+    if (!isAuthenticated || !supabaseUser) {
+      toast.error("You need to be signed in to upload documents.");
+      return;
+    }
+
+    const file = files[0];
+    const filePath = `${supabaseUser.id}/${Date.now()}_${file.name}`;
+
+    try {
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('documents') // Ensure you have a bucket named 'documents' in Supabase Storage
+        .upload(filePath, file);
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: publicUrlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(filePath);
+
+      const fileUrl = publicUrlData.publicUrl;
+
+      const { data, error: insertError } = await supabase
+        .from('documents')
+        .insert({
+          user_id: supabaseUser.id,
+          title: file.name.split('.')[0],
+          type: 'other', // Default to 'other', can be changed later
+          file_name: file.name,
+          file_size: file.size,
+          file_url: fileUrl,
+        })
+        .select();
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      if (data && data.length > 0) {
+        setDocuments(prevDocs => [...prevDocs, data[0]]);
+        toast.success("Document uploaded successfully!");
+      }
+    } catch (error: any) {
+      console.error("Error uploading document:", error.message);
+      toast.error(`Failed to upload document: ${error.message}`);
+    }
+  };
 
   const filteredApplications = mockApplications.filter(app =>
     app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -88,7 +148,7 @@ const Index = () => {
     app.role.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  const filteredDocuments = mockDocuments.filter(doc =>
+  const filteredDocuments = documents.filter(doc =>
     doc.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     doc.content?.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -114,6 +174,10 @@ const Index = () => {
               </div>
             </div>
             <div className="flex items-center space-x-4">
+              <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10" onClick={() => window.location.href = "/"}>
+                <Home className="w-4 h-4 mr-2" />
+                Home
+              </Button>
               <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
                 <Settings className="w-4 h-4" />
               </Button>
@@ -158,9 +222,17 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground mb-4">
                   Click to upload files and drop documents here or select files
                 </p>
-                <Button variant="outline" size="sm">
-                  Select Files
-                </Button>
+                <input
+                  type="file"
+                  id="file-upload"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+                <label htmlFor="file-upload">
+                  <Button variant="outline" size="sm" asChild>
+                    <span>Select Files</span>
+                  </Button>
+                </label>
               </div>
             </div>
 
@@ -190,9 +262,9 @@ const Index = () => {
                 <h3 className="font-medium mb-3">Selected Documents</h3>
                 <div className="space-y-2">
                   {selectedDocuments.map(id => {
-                    const doc = mockDocuments.find(d => d.id === id);
+                    const doc = documents.find(d => d.id === id); // Use 'documents' state
                     return doc ? (
-                      <div key={id} className="text-sm p-2 bg-accent rounded flex items-center justify-between">
+                      <div key={doc.id} className="text-sm p-2 bg-accent rounded flex items-center justify-between">
                         <span className="truncate">{doc.title}</span>
                         <Badge variant="secondary" className="text-xs">
                           {doc.type}
@@ -251,6 +323,7 @@ const Index = () => {
                       {...doc} 
                       selected={selectedDocuments.includes(doc.id)}
                       onClick={() => toggleDocumentSelection(doc.id)}
+                      createdAt={new Date(doc.created_at).toLocaleDateString()} // Explicitly pass formatted date
                     />
                   ))
               }
