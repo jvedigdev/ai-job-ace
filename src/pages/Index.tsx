@@ -10,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import { supabase } from "@/integrations/supabase/client";
 import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
 import { useToast } from "@/components/ui/use-toast";
+import { Link } from "react-router-dom"; // Import Link
 
 // Mock data for demonstration
 const mockApplications = [
@@ -185,14 +186,14 @@ const Index = () => {
       <header className="bg-header border-b">
         <div className="max-w-7xl mx-auto px-6 py-3">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3"> {/* Added Link here */}
               <div className="flex items-center space-x-2">
                 <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
                   <Zap className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-header-foreground font-medium">AI'll Take That Job</span>
               </div>
-            </div>
+            </Link>
             <div className="flex items-center space-x-4">
               <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
                 <Settings className="w-4 h-4" />
