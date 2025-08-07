@@ -195,10 +195,10 @@ const Index = () => {
                 </Button>
               </div>
             )}
-          </div>
+            </div>
 
-          {/* Main Content Area */}
-          <div className="flex-1">
+            {/* Main Content Area */}
+            <div className="flex-1">
             {/* Search Bar */}
             <div className="mb-6">
               <SearchBar
@@ -276,6 +276,7 @@ const Index = () => {
                 )}
               </div>
             )}
+            </div>
           </div>
         </div>
       </div>
