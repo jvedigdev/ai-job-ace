@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@clerk/clerk-react";
 import { Button } from "@/components/ui/button";
 import { ApplicationCard } from "@/components/ApplicationCard";
 import { DocumentCard } from "@/components/DocumentCard";
@@ -116,23 +117,35 @@ const Index = () => {
               <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
                 <Settings className="w-4 h-4" />
               </Button>
-              <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
-                ⚡
-              </Button>
-              <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-                <span className="text-xs text-white font-medium">K</span>
-              </div>
+              <SignedIn>
+                <UserButton />
+              </SignedIn>
+              <SignedOut>
+                <div className="flex items-center space-x-2">
+                  <SignInButton>
+                    <Button variant="ghost" size="sm" className="text-header-foreground hover:bg-white/10">
+                      Sign In
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton>
+                    <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                      Sign Up
+                    </Button>
+                  </SignUpButton>
+                </div>
+              </SignedOut>
             </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="bg-background">
-        {/* Welcome Section */}
-        <div className="max-w-7xl mx-auto px-6 py-8">
-          <h1 className="text-4xl font-bold text-primary mb-2">Welcome to jobs llm</h1>
-        </div>
+      <SignedIn>
+        <div className="bg-background">
+          {/* Welcome Section */}
+          <div className="max-w-7xl mx-auto px-6 py-8">
+            <h1 className="text-4xl font-bold text-primary mb-2">Welcome to jobs llm</h1>
+          </div>
         
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-col lg:flex-row gap-8">
@@ -280,6 +293,33 @@ const Index = () => {
           </div>
         </div>
       </div>
+      </SignedIn>
+      
+      <SignedOut>
+        <div className="min-h-screen bg-background flex items-center justify-center">
+          <div className="text-center max-w-md mx-auto px-6">
+            <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center">
+              <Zap className="w-8 h-8 text-white" />
+            </div>
+            <h1 className="text-3xl font-bold text-primary mb-4">AI'll Take That Job</h1>
+            <p className="text-muted-foreground mb-8">
+              Your AI-powered job application assistant. Sign up to start managing your applications and documents.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <SignUpButton>
+                <Button size="lg" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                  Get Started
+                </Button>
+              </SignUpButton>
+              <SignInButton>
+                <Button variant="outline" size="lg">
+                  Sign In
+                </Button>
+              </SignInButton>
+            </div>
+          </div>
+        </div>
+      </SignedOut>
     </div>
   );
 };
