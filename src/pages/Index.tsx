@@ -7,6 +7,9 @@ import { SearchBar } from "@/components/SearchBar";
 import { Badge } from "@/components/ui/badge";
 import { Plus, Upload, Settings, FileText, Briefcase, Zap } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { supabase } from "@/integrations/supabase/client";
+import { useSupabaseAuth } from "@/hooks/useSupabaseAuth";
+import { useToast } from "@/components/ui/use-toast";
 
 // Mock data for demonstration
 const mockApplications = [
@@ -81,6 +84,8 @@ const Index = () => {
   const [selectedView, setSelectedView] = useState<"applications" | "documents">("applications");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
+  const { supabaseUser, isAuthenticated } = useSupabaseAuth();
+  const { toast } = useToast();
 
   const filteredApplications = mockApplications.filter(app =>
     app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -97,6 +102,77 @@ const Index = () => {
     setSelectedDocuments(prev =>
       prev.includes(id) ? prev.filter(docId => docId !== id) : [...prev, id]
     );
+  };
+
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isAuthenticated || !supabaseUser) {
+      toast({
+        title: "Authentication Required",
+        description: "Please sign in to upload documents.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    const fileExtension = file.name.split('.').pop();
+    const fileName = `${supabaseUser.id}/${Date.now()}.${fileExtension}`;
+
+    try {
+      // Upload file to Supabase Storage
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('documents')
+        .upload(fileName, file, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      // Get public URL of the uploaded file
+      const { data: publicUrlData } = supabase.storage
+        .from('documents')
+        .getPublicUrl(fileName);
+
+      if (!publicUrlData || !publicUrlData.publicUrl) {
+        throw new Error("Could not get public URL for the uploaded file.");
+      }
+
+      // Insert document metadata into the 'documents' table
+      const { error: insertError } = await supabase
+        .from('documents')
+        .insert({
+          user_id: supabaseUser.id,
+          title: file.name,
+          type: 'other', // Default type, can be changed later
+          file_name: file.name,
+          file_size: file.size,
+          file_url: publicUrlData.publicUrl,
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      toast({
+        title: "Upload Successful",
+        description: `${file.name} has been uploaded and saved.`,
+      });
+      // TODO: Refresh document list after upload
+    } catch (error: any) {
+      console.error("Error uploading file:", error);
+      toast({
+        title: "Upload Failed",
+        description: error.message || "An unexpected error occurred during upload.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -158,9 +234,17 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground mb-4">
                   Click to upload files and drop documents here or select files
                 </p>
-                <Button variant="outline" size="sm">
-                  Select Files
-                </Button>
+                <input
+                  id="file-upload"
+                  type="file"
+                  className="hidden"
+                  onChange={handleFileUpload}
+                />
+                <label htmlFor="file-upload">
+                  <Button variant="outline" size="sm" asChild>
+                    <span>Select Files</span>
+                  </Button>
+                </label>
               </div>
             </div>
 
