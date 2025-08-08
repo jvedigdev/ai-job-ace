@@ -61,9 +61,28 @@ const Index = () => {
   const [selectedView, setSelectedView] = useState<"applications" | "documents">("applications");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedDocuments, setSelectedDocuments] = useState<string[]>([]);
-  const [documents, setDocuments] = useState<Document[]>([]); // Use Document type for state
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [applications, setApplications] = useState<any[]>([]);
 
   useEffect(() => {
+    const fetchApplications = async () => {
+      if (isAuthenticated && supabaseUser) {
+        const { data, error } = await supabase
+          .from('applications')
+          .select('*')
+          .eq('user_id', supabaseUser.id);
+
+        if (error) {
+          console.error("Error fetching applications:", error);
+          toast.error("Failed to load applications.");
+        } else {
+          setApplications(data || []);
+        }
+      } else {
+        setApplications([]);
+      }
+    };
+
     const fetchDocuments = async () => {
       if (isAuthenticated && supabaseUser) {
         const { data, error } = await supabase
@@ -78,11 +97,11 @@ const Index = () => {
           setDocuments(data || []);
         }
       } else {
-        // If not authenticated, clear documents or load mock data if preferred
         setDocuments([]); 
       }
     };
 
+    fetchApplications();
     fetchDocuments();
   }, [isAuthenticated, supabaseUser]);
 
@@ -142,7 +161,7 @@ const Index = () => {
     }
   };
 
-  const filteredApplications = mockApplications.filter(app =>
+  const filteredApplications = applications.filter(app =>
     app.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
     app.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
     app.role.toLowerCase().includes(searchQuery.toLowerCase())
@@ -252,6 +271,13 @@ const Index = () => {
                 >
                   Documents
                 </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => window.location.href = "/apply"}
+                >
+                  + New Application
+                </Button>
               </div>
 
               {/* Selected Documents */}
@@ -313,7 +339,12 @@ const Index = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
                 {selectedView === "applications" 
                   ? filteredApplications.map(app => (
-                      <ApplicationCard key={app.id} {...app} />
+                      <ApplicationCard 
+                        key={app.id} 
+                        {...app}
+                        appliedDate={app.applied_date ? new Date(app.applied_date).toLocaleDateString() : undefined}
+                        lastUpdate={app.last_update ? new Date(app.last_update).toLocaleDateString() : undefined}
+                      />
                     ))
                   : filteredDocuments.map(doc => (
                       <DocumentCard 
