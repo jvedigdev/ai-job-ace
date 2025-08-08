@@ -161,24 +161,20 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header - NotebookLM Style */}
-      <header className="bg-card border-b">
-        <div className="max-w-7xl mx-auto px-6 py-3">
+      {/* Header */}
+      <header className="border-b">
+        <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
               <div className="flex items-center space-x-2">
-                <div className="w-6 h-6 rounded bg-primary flex items-center justify-center">
+                <div className="w-8 h-8 rounded bg-primary flex items-center justify-center">
                   <Zap className="w-4 h-4 text-primary-foreground" />
                 </div>
-                <span className="text-foreground font-medium">AI'll Take That Job</span>
+                <span className="font-semibold text-lg">AI'll Take That Job</span>
               </div>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="ghost" size="sm" className="text-foreground hover:bg-accent" onClick={() => window.location.href = "/"}>
-                <Home className="w-4 h-4 mr-2" />
-                Home
-              </Button>
-              <Button variant="ghost" size="sm" className="text-foreground hover:bg-accent">
+              <Button variant="ghost" size="sm">
                 <Settings className="w-4 h-4" />
               </Button>
               <SignedIn>
@@ -187,7 +183,7 @@ const Index = () => {
               <SignedOut>
                 <div className="flex items-center space-x-2">
                   <SignInButton>
-                    <Button variant="ghost" size="sm" className="text-foreground hover:bg-accent">
+                    <Button variant="ghost" size="sm">
                       Sign In
                     </Button>
                   </SignInButton>
@@ -205,10 +201,11 @@ const Index = () => {
 
       {/* Main Content */}
       <SignedIn>
-        <div className="bg-background">
+        <div className="min-h-screen">
           {/* Welcome Section */}
           <div className="max-w-7xl mx-auto px-6 py-8">
-            <h1 className="text-4xl font-bold text-primary mb-2">Welcome to jobs llm</h1>
+            <h1 className="text-3xl font-bold mb-2">Welcome to your job application hub</h1>
+            <p className="text-muted-foreground">Manage your applications and documents in one place</p>
           </div>
         
           <div className="max-w-7xl mx-auto px-6">
@@ -216,16 +213,17 @@ const Index = () => {
               {/* Left Sidebar */}
               <div className="lg:w-80 space-y-6">
               {/* Upload Section */}
-              <div className="bg-card rounded-lg p-6 border">
-                <div className="text-center py-8">
-                  <Upload className="w-16 h-16 mx-auto mb-4 text-muted-foreground" />
+              <div className="rounded-lg border p-6">
+                <div className="text-center py-6">
+                  <Upload className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground mb-4">
-                    Click to upload files and drop documents here or select files
+                    Upload documents for your applications
                   </p>
                   <input
                     type="file"
                     id="file-upload"
                     className="hidden"
+                    accept=".pdf,.doc,.docx,.txt"
                     onChange={handleFileUpload}
                   />
                   <label htmlFor="file-upload">
@@ -239,7 +237,7 @@ const Index = () => {
               {/* Tab Navigation */}
               <div className="flex space-x-1 bg-muted rounded-lg p-1">
                 <Button
-                  variant={selectedView === "applications" ? "secondary" : "ghost"}
+                  variant={selectedView === "applications" ? "default" : "ghost"}
                   size="sm"
                   className="flex-1"
                   onClick={() => setSelectedView("applications")}
@@ -247,24 +245,24 @@ const Index = () => {
                   My Applications
                 </Button>
                 <Button
-                  variant={selectedView === "documents" ? "secondary" : "ghost"} 
+                  variant={selectedView === "documents" ? "default" : "ghost"} 
                   size="sm"
                   className="flex-1"
                   onClick={() => setSelectedView("documents")}
                 >
-                  Apply
+                  Documents
                 </Button>
               </div>
 
               {/* Selected Documents */}
               {selectedDocuments.length > 0 && (
-                <div className="bg-card rounded-lg p-4 border">
+                <div className="rounded-lg border p-4">
                   <h3 className="font-medium mb-3">Selected Documents</h3>
                   <div className="space-y-2">
                     {selectedDocuments.map(id => {
-                      const doc = documents.find(d => d.id === id); // Use 'documents' state
+                      const doc = documents.find(d => d.id === id);
                       return doc ? (
-                        <div key={doc.id} className="text-sm p-2 bg-accent rounded flex items-center justify-between">
+                        <div key={doc.id} className="text-sm p-2 bg-muted rounded flex items-center justify-between">
                           <span className="truncate">{doc.title}</span>
                           <Badge variant="secondary" className="text-xs">
                             {doc.type}
@@ -369,12 +367,12 @@ const Index = () => {
       </SignedIn>
       
       <SignedOut>
-        <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="min-h-screen flex items-center justify-center">
           <div className="text-center max-w-md mx-auto px-6">
             <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary flex items-center justify-center">
               <Zap className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-3xl font-bold text-primary mb-4">AI'll Take That Job</h1>
+            <h1 className="text-3xl font-bold mb-4">AI'll Take That Job</h1>
             <p className="text-muted-foreground mb-8">
               Your AI-powered job application assistant. Sign up to start managing your applications and documents.
             </p>
